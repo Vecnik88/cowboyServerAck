@@ -52,7 +52,7 @@ usr_registration(Req,State) ->
 %% return reply ok | err
 usr_auth(Req,State) ->
   case common:is_auth(Req) of
-  {ok, _} ->
+  {ok,_} ->
     reply_serv:reply_ok_data(Req,
                              State,
                              ?BIN_OK("alreadyAuth"));
@@ -111,9 +111,13 @@ get_usr_list(Req,State) ->
                                        ?BIN_ERR("notAuthReq"))
   end.
 
+%% usr_change_password - change user password %%
+%% @Req = request to server
+%% @State = state
+%% return updatePass | noUpdate
 usr_change_password(Req,State) ->
   case common:is_auth(Req) of
-    {ok, LoginSess} ->
+    {ok,LoginSess} ->
       Login = cowboy_req:binding(login,Req),
       if Login =:= LoginSess ->
         case common:get_old_and_new_pass_with_body(Req) of

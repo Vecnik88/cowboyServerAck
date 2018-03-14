@@ -63,7 +63,6 @@ get_old_and_new_pass_with_body(Req) ->
 %% @List = list all users
 %% @Req = request
 %% if list empty send fin flags
-
 send_list_usrs_to_client([], Req,State) ->
   cowboy_req:stream_body(<<"ok">>,fin,Req),
   {ok, Req, State};

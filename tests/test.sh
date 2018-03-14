@@ -14,14 +14,14 @@ curl -H "Content-Type: application/json" -X POST -d '{"login":"anton1","password
       http://localhost:8080/user/registration
 sleep 2
 
-echo     "\nПользователь уже зарегистрирован"
-echo     "\nuser anton1: "
+echo     "\n\nПользователь уже зарегистрирован"
+echo     "user anton1: "
 curl -H "Content-Type: application/json" -X POST -d '{"login":"anton1","password":"12345678"}' \
       http://localhost:8080/user/registration
 sleep 2
 
-echo     "\nНевалидный запрос"
-echo     "\nrequest: "
+echo     "\n\nНевалидный запрос"
+echo     "request: "
 curl -H "Content-Type: application/json" -X POST -d '{"login":"anton1"}' \
       http://localhost:8080/user/registration
 sleep 2
@@ -31,65 +31,65 @@ curl -H "Content-Type: application/json" -X POST -d '{"login":"anton1","password
 sleep 2
 
 # 2. Авторизация пользователя -> /user/auth
-echo     "\nУспешная авторизация пользователя, ответом возвращается токен"
-echo     "\nuser anton1: "
+echo     "\n\nУспешная авторизация пользователя, ответом возвращается токен"
+echo     "user anton1: "
 curl -H "Content-Type: application/json" -X GET -d '{"login":"anton1","password":"12345678"}' http://localhost:8080/user/auth
 sleep 2
 
-echo     "\nПользователь не найден"
-echo     "\nuser vadim: "
+echo     "\n\nПользователь не найден"
+echo     "user vadim: "
 curl -H "Content-Type: application/json" -X GET -d '{"login":"vadim","password":"12345678"}' http://localhost:8080/user/auth
 sleep 2
 
-echo     "\nНеверный пароль"
-echo     "\nuser anton: "
+echo     "\n\nНеверный пароль"
+echo     "user anton: "
 curl -H "Content-Type: application/json" -X GET -d '{"login":"anton","password":"12345678910"}' http://localhost:8080/user/auth
 sleep 2
 
-echo     "\nНевалидный запрос"
-echo     "\nuser anton: "
+echo     "\n\nНевалидный запрос"
+echo     "user anton: "
 curl -H "Content-Type: application/json" -X GET -d '{"login":"anton"}' http://localhost:8080/user/auth
 sleep 2
 
 # 3. Смена пароля пользователя -> /user/{login}
-echo     "\nУспешная смена пароля пользователя"
-echo     "\nuser anton1: "
+echo     "\n\nУспешная смена пароля пользователя"
+echo     "user anton1: "
 curl --cookie "LoginId=anton1" -H "Content-Type: application/json" -X PUT -d '{"old_password":"12345678","new_password":"123456789"}' \
      http://localhost:8080/user/anton1
 sleep 2
 
-echo     "\nПопытка отправки неавторизованного запроса"
-echo     "\nuser anton1: "
+echo     "\n\nПопытка отправки неавторизованного запроса"
+echo     "user anton1: "
 curl -H "Content-Type: application/json" -X PUT -d '{"old_password":"12345678","new_password":"123456789"}' \
      http://localhost:8080/user/anton1
 sleep 2
 
-echo     "\nПопытка смены чужого пароля"
-echo     "\nuser anton1: "
+echo     "\n\nПопытка смены чужого пароля"
+echo     "user anton1: "
 curl --cookie "LoginId=anton1" -H "Content-Type: application/json" -X PUT -d '{"old_password":"12345678","new_password":"123456789"}' \
      http://localhost:8080/user/maxim
 sleep 2
 
-echo     "\nНеправильный old_password"
-echo     "\nuser anton1: "
+echo     "\n\nНеправильный old_password"
+echo     "user anton1: "
 curl --cookie "LoginId=anton1" -H "Content-Type: application/json" -X PUT -d '{"old_password":"1234567810","new_password":"123456789"}' \
      http://localhost:8080/user/anton1
 sleep 2
 
-echo     "\nНевалидный запрос"
-echo     "\nuser anton1: "
+echo     "\n\nНевалидный запрос"
+echo     "user anton1: "
 curl --cookie "LoginId=anton1" -H "Content-Type: application/json" -X PUT -d '{"old_password":"12345678"}' \
      http://localhost:8080/user/anton1
 sleep 2
 
 # 4. Получение списка пользователей -> /user/
-echo     "\nУспешное получение списка зарегистрированных пользователей"
-echo     "\nList: "
+echo     "\n\nУспешное получение списка зарегистрированных пользователей"
+echo     "List: "
 curl --cookie "LoginId=anton1" -X GET http://localhost:8080/user/
 sleep 2
 
-echo     "\nПопытка отправки неавторизованного запроса"
-echo     "\nnoauth request"
+echo     "\n\nПопытка отправки неавторизованного запроса"
+echo     "noauth request"
 curl -X GET http://localhost:8080/user/
 sleep 2
 
