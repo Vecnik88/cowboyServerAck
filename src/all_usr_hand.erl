@@ -1,5 +1,6 @@
 -module(all_usr_hand).
 -behaviour(cowboy_handler).
+-include("usr.hrl").
 
 -export([init/2]).
 

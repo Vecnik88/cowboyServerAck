@@ -4,7 +4,9 @@
 %% API helpers %%
 -export([
          read_body/1,
-         get_usr_data_with_body/1
+         get_usr_data_with_body/1,
+         get_old_and_new_pass_with_body/1,
+         send_list_usrs_to_client/3
         ]).
 
 %% API conditions %%
@@ -42,6 +44,34 @@ get_usr_data_with_body(Req) ->
    	  {err,notValReq}
    end.
 
+%% get_old_and_new_pass_with_body - parse json object %%
+%% and return old and new passwod tuple               %%
+%% @Req = request
+%% return old and new password
+get_old_and_new_pass_with_body(Req) ->
+  {ok, Json} = read_body(Req),
+  {Attr} = jiffy:decode(Json),
+  try
+    {binary_to_list(proplists:get_value(?OLD_PASS, Attr)),
+     binary_to_list(proplists:get_value(?NEW_PASS, Attr))}
+   catch
+   	_:_ ->
+   	  {err,notValReq}
+   end.
+
+%% send_list_usrs_to_client - send list users to client %%
+%% @List = list all users
+%% @Req = request
+%% if list empty send fin flags
+
+send_list_usrs_to_client([], Req,State) ->
+  cowboy_req:stream_body(<<"ok">>,fin,Req),
+  {ok, Req, State};
+send_list_usrs_to_client([Head | Tail],Req,State) ->
+  cowboy_req:stream_body(list_to_binary(Head), nofin, Req),
+  cowboy_req:stream_body(<<"\n">>, nofin, Req),
+  send_list_usrs_to_client(Tail,Req,State).
+
 %% is_auth - control auth with usr %%
 %% @Req = request
 %% return true | false auth
@@ -50,10 +80,10 @@ is_auth(Req) ->
   case lists:keyfind(<<"LoginId">>, 1, Cookies) of
     {_, Login} ->
       case ets:lookup(?DB_NAME, binary_to_list(Login)) of
-        [] -> false;
-        _  -> true
+        [] -> {err, noAuth};
+        _  -> {ok, Login}
       end;
-    _ -> false
+    _ -> {err, noSessId}
   end.
 
 %% is_valid_req_usr - valid user request? %%

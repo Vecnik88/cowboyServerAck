@@ -1,4 +1,3 @@
-%% usr_db.erl  %%
 -module(usr_db).
 -include("usr.hrl").
 
