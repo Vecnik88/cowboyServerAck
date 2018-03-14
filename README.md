@@ -1,7 +1,8 @@
 Сборка:
-     git clone https://github.com/Vecnik88/cowboyServerAck
-     cd cowboyServerAck
-     make run
+
+	git clone https://github.com/Vecnik88/cowboyServerAck
+	cd cowboyServerAck
+	make run
 
 Пароль имеет ограничения 8 <= password <= 16;
 Логин имеет ограничение 2 <= login <= 255.
